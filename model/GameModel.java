@@ -6,7 +6,7 @@ import model.PasswordModel;
 
 public class GameModel {
 	PasswordModel currentPassword;
-	int totalAttempts=10;
+	int totalAttempts=3;
 	int passwordLength=5;
 	ArrayList<PasswordModel> attempts;
 	
@@ -22,15 +22,27 @@ public class GameModel {
 		totalAttempts=nAttempts;
 	}
 	
-	public void clearAttempts() {
-		attempts.clear();
-	}
-	
 	public int getAttemptsLeft() {
 		return totalAttempts-attempts.size();
 	}
 	
+	public ArrayList<PasswordModel> getAttemptsList() {
+		return attempts;
+	}
+	
 	public int getPasswordLength() {
 		return passwordLength;
+	}
+	
+	public PasswordModel getPassword() {
+		return currentPassword;
+	}
+	
+	public void addAttempt(PasswordModel p) {		
+		attempts.add(p);
+	}
+	
+	public void clearAttempts() {
+		attempts.clear();
 	}
 }
