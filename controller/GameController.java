@@ -56,7 +56,7 @@ public class GameController {
 	}
 	
 	public void saveGame() {
-		File f = new File("save.txt");
+		File f = new File("savedGame.txt");
 		
 		try {
 			FileWriter fw = new FileWriter(f);
@@ -64,7 +64,7 @@ public class GameController {
 			ArrayList<PasswordModel> pl = gm.getAttemptsList();
 			
 			fw.write(Integer.toString(gm.getPasswordLength())+" ");
-			fw.write(Integer.toString(gm.getTotalAttempts())+" ");
+			fw.write(Integer.toString(gm.getTotalAttempts())+"\n");
 			
 			PasswordModel pw = gm.getPassword();
 		
@@ -89,7 +89,38 @@ public class GameController {
 	}
 	
 	public void loadGame() {
+		File f = new File("savedGame.txt");
 		
+		try {
+			Scanner sc = new Scanner(f);
+			int pwLength = sc.nextInt();
+			
+			gm.setPasswordLength(pwLength);
+			gm.setTotalAttempts(sc.nextInt());
+			ArrayList<Integer> pw = new ArrayList<Integer>();
+			
+			for (int i=0; i<pwLength; i++)
+				pw.add(new Integer(sc.nextInt()));
+			gm.setPassword(new PasswordModel(pw));
+			
+			int plLength = sc.nextInt();
+			ArrayList<PasswordModel> pl = new ArrayList<PasswordModel>();
+			
+			for (int i=0; i<plLength; i++) {
+				ArrayList<Integer> tmp = new ArrayList<Integer>();
+				
+				for (int j=0; j<pwLength; j++)
+					tmp.add(new Integer(sc.nextInt()));
+				pl.add(new PasswordModel(tmp));
+			}
+			gm.setAttempts(pl);
+			
+			sc.close();
+		}
+		catch (Exception e) {
+			System.out.println("Oops, no loading for you!");
+			return;
+		}
 	}
 	
 	public void runGame() {
