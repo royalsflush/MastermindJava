@@ -3,6 +3,10 @@ package controller;
 import java.util.Scanner;
 import java.util.ArrayList;
 
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
+
 import view.*;
 import model.*;
 
@@ -52,7 +56,36 @@ public class GameController {
 	}
 	
 	public void saveGame() {
+		File f = new File("save.txt");
 		
+		try {
+			FileWriter fw = new FileWriter(f);
+			
+			ArrayList<PasswordModel> pl = gm.getAttemptsList();
+			
+			fw.write(Integer.toString(gm.getPasswordLength())+" ");
+			fw.write(Integer.toString(gm.getTotalAttempts())+" ");
+			
+			PasswordModel pw = gm.getPassword();
+		
+			for (int i=0; i<gm.getPasswordLength(); i++)
+				fw.write(Integer.toString(pw.get(i))+" ");
+
+			fw.write("\n"+Integer.toString(pl.size())+"\n");
+			
+			for (int i=0; i<pl.size(); i++) {
+				for (int j=0; j<gm.getPasswordLength(); j++)
+					fw.write(Integer.toString(pl.get(i).get(j))+" ");
+				fw.write("\n");
+			}
+				
+			fw.flush();
+			fw.close();
+		}
+		catch (IOException e) {
+			System.out.println("Oops, no saving for you!");
+			return;
+		}
 	}
 	
 	public void loadGame() {

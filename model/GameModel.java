@@ -22,6 +22,14 @@ public class GameModel {
 		totalAttempts=nAttempts;
 	}
 	
+	public void setPasswordLength(int pLength) {
+		passwordLength=pLength;
+	}
+	
+	public void setAttempts(ArrayList<PasswordModel> pl) {
+		attempts=pl;
+	}
+	
 	public int getAttemptsLeft() {
 		return totalAttempts-attempts.size();
 	}
@@ -32,6 +40,10 @@ public class GameModel {
 	
 	public int getPasswordLength() {
 		return passwordLength;
+	}
+	
+	public int getTotalAttempts() {
+		return totalAttempts;
 	}
 	
 	public PasswordModel getPassword() {
