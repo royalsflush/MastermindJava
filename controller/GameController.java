@@ -3,15 +3,13 @@ package controller;
 import java.util.Scanner;
 import java.util.ArrayList;
 
-import java.io.File;
-import java.io.FileWriter;
-import java.io.IOException;
-
 import view.*;
 import model.*;
+import controller.LoadSaveController;
 
 public class GameController {
 	private static GameController gc;
+	LoadSaveController lsc;
 	GameModel gm;
 	GameCLView gv;
 	
@@ -21,6 +19,8 @@ public class GameController {
 	private GameController() {
 		gm = new GameModel();
 		gv = new GameCLView(gm);
+	
+		lsc = new LoadSaveController(gm);
 	}
 	
 	public static GameController get() {
@@ -54,75 +54,7 @@ public class GameController {
 		gm.clearAttempts();
 		this.newPassword();
 	}
-	
-	public void saveGame() {
-		File f = new File("savedGame.txt");
-		
-		try {
-			FileWriter fw = new FileWriter(f);
-			
-			ArrayList<PasswordModel> pl = gm.getAttemptsList();
-			
-			fw.write(Integer.toString(gm.getPasswordLength())+" ");
-			fw.write(Integer.toString(gm.getTotalAttempts())+"\n");
-			
-			PasswordModel pw = gm.getPassword();
-		
-			for (int i=0; i<gm.getPasswordLength(); i++)
-				fw.write(Integer.toString(pw.get(i))+" ");
 
-			fw.write("\n"+Integer.toString(pl.size())+"\n");
-			
-			for (int i=0; i<pl.size(); i++) {
-				for (int j=0; j<gm.getPasswordLength(); j++)
-					fw.write(Integer.toString(pl.get(i).get(j))+" ");
-				fw.write("\n");
-			}
-				
-			fw.flush();
-			fw.close();
-		}
-		catch (IOException e) {
-			System.out.println("Oops, no saving for you!");
-			return;
-		}
-	}
-	
-	public void loadGame() {
-		File f = new File("savedGame.txt");
-		
-		try {
-			Scanner sc = new Scanner(f);
-			int pwLength = sc.nextInt();
-			
-			gm.setPasswordLength(pwLength);
-			gm.setTotalAttempts(sc.nextInt());
-			ArrayList<Integer> pw = new ArrayList<Integer>();
-			
-			for (int i=0; i<pwLength; i++)
-				pw.add(new Integer(sc.nextInt()));
-			gm.setPassword(new PasswordModel(pw));
-			
-			int plLength = sc.nextInt();
-			ArrayList<PasswordModel> pl = new ArrayList<PasswordModel>();
-			
-			for (int i=0; i<plLength; i++) {
-				ArrayList<Integer> tmp = new ArrayList<Integer>();
-				
-				for (int j=0; j<pwLength; j++)
-					tmp.add(new Integer(sc.nextInt()));
-				pl.add(new PasswordModel(tmp));
-			}
-			gm.setAttempts(pl);
-			
-			sc.close();
-		}
-		catch (Exception e) {
-			System.out.println("Oops, no loading for you!");
-			return;
-		}
-	}
-	
 	public void runGame() {
 		while (run) {
 			this.newGame();
@@ -148,10 +80,10 @@ public class GameController {
 						this.newGame();
 						break;
 					case 3:
-						this.saveGame();
+						lsc.saveGame();
 						break;
 					case 4:
-						this.loadGame();
+						lsc.loadGame();
 						break;
 					case 5:
 						run=false;
